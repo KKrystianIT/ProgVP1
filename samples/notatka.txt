@@ -1,0 +1,6 @@
+Notatka z zajęć
+
+Pierwszy akapit z polskimi znakami: zażółć gęślą jaźń.
+
+Drugi akapit.
+Ta linia jest w tym samym akapicie.

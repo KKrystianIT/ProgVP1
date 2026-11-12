@@ -34,7 +34,7 @@ def main() -> int:
 
     try:
         result = REGISTRY[key](source, out)
-    except ValueError as e:
+    except (ValueError, RuntimeError) as e:
         print(f"Błąd: {e}")
         return 1
 
