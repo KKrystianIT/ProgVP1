@@ -7,10 +7,11 @@ Przykład: python main.py samples/studenci.csv .json wyniki
 import sys
 from pathlib import Path
 
-from converters import REGISTRY, available_targets
+from converters import convert, setup_logging
 
 
 def main() -> int:
+    setup_logging()
     if len(sys.argv) != 4:
         print("Użycie: python main.py PLIK FORMAT KATALOG")
         print("Przykład: python main.py samples/studenci.csv .json wyniki")
@@ -19,23 +20,15 @@ def main() -> int:
     source = Path(sys.argv[1])
     fmt = sys.argv[2].lower()
     out = Path(sys.argv[3])
-
-    if not source.is_file():
-        print(f"Błąd: nie znaleziono pliku {source}")
-        return 1
-
-    key = (source.suffix.lower(), fmt)
-    if key not in REGISTRY:
-        print(f"Błąd: nieobsługiwana konwersja {key[0]} -> {fmt}")
-        print(f"Dostępne formaty dla tego pliku: {available_targets(source)}")
-        return 1
-
     out.mkdir(parents=True, exist_ok=True)
 
     try:
-        result = REGISTRY[key](source, out)
+        result = convert(source, fmt, out)
     except (ValueError, RuntimeError) as e:
         print(f"Błąd: {e}")
+        return 1
+    except Exception as e:
+        print(f"Nieoczekiwany błąd: {e}. Szczegóły zapisano w pliku konwerter.log.")
         return 1
 
     print(f"Gotowe: {result}")
